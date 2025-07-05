@@ -1,11 +1,11 @@
 {
-  "id": "my-feature (DON'T include `obsidian-` prefix)",
-  "name": "My Feature (Change id, name, and description!)",
+  "id": "ogent",
+  "name": "Ogent",
   "version": "1.0.0",
   "minAppVersion": "1.7.2",
-  "description": "Obsidian plugin template powered with Deno",
-  "author": "<Your Name>",
-  "authorUrl": "<Your Homepage URL>",
-  "fundingUrl": "<Your Funding URL>",
-  "isDesktopOnly": false
+  "description": "AI Agent in App",
+  "author": "ras0q",
+  "authorUrl": "https://github.com/ras0q",
+  "fundingUrl": "https://github.com/sponsors/ras0q",
+  "isDesktopOnly": true
 }
