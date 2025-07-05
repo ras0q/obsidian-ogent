@@ -63,63 +63,19 @@ export class OgentSidebarView extends ItemView {
       );
 
       sendButton.setDisabled(true);
+
+      let displayText = "## 🤖 Assistant:\n";
+      let plaintext = "";
       try {
         const agent = buildMastra(this.app).getAgent("obsidianAgent");
         if (!agent) throw new Error("Agent not found");
         const response = await agent.stream(history);
 
         const responseEl = historyBox.createDiv();
-        let displayText = "## 🤖 Assistant:\n";
-        let plaintext = "";
         for await (const part of response.fullStream) {
-          switch (part.type) {
-            case "error": {
-              const { isRetryable, data } = part.error as Record<
-                string,
-                unknown
-              >;
-              displayText += generateJSONCallout(
-                "FAILURE",
-                "Error",
-                { isRetryable, data },
-                true,
-              );
-              break;
-            }
-            case "tool-call": {
-              displayText += generateJSONCallout(
-                "IMPORTANT",
-                `Tool Call (${part.toolName})`,
-                part.args,
-                true,
-              );
-              break;
-            }
-            case "tool-result": {
-              displayText += generateJSONCallout(
-                "SUCCESS",
-                `Tool Result (${part.toolName})`,
-                part.result,
-                true,
-              );
-              break;
-            }
-            case "text-delta": {
-              displayText += part.textDelta;
-              plaintext += part.textDelta;
-              break;
-            }
-            case "step-start":
-              break;
-            case "step-finish":
-              break;
-            case "finish":
-              break;
-            default:
-              console.warn("Unknown part type:", part);
-              displayText += `Unknown part type: ${part.type}`;
-              break;
-          }
+          const { full, plain } = parseStreamPart(part);
+          displayText += full;
+          plaintext += plain;
 
           responseEl.empty();
           MarkdownRenderer.render(
@@ -133,11 +89,19 @@ export class OgentSidebarView extends ItemView {
         history.push({ role: "assistant", content: plaintext });
       } catch (e) {
         const errMsg = e instanceof Error ? e.message : String(e);
-        history.push({ role: "assistant", content: `エラー: ${errMsg}` });
+        displayText += generateJSONCallout(
+          "FAILURE",
+          "Error",
+          { message: errMsg },
+          true,
+        );
+        plaintext = `Error: ${errMsg}`;
+
+        history.push({ role: "assistant", content: plaintext });
         const errorEl = historyBox.createDiv();
         MarkdownRenderer.render(
           this.app,
-          `Assistant:\nエラー: ${errMsg}`,
+          displayText,
           errorEl,
           ".",
           this,
@@ -153,16 +117,87 @@ export class OgentSidebarView extends ItemView {
   }
 }
 
-const generateJSONCallout = (
+type Agent = ReturnType<typeof buildMastra>["getAgent"] extends // deno-lint-ignore no-explicit-any
+(...args: any[]) => infer R ? NonNullable<R>
+  : never;
+type StreamResponse = ReturnType<Agent["stream"]> extends Promise<infer R> ? R
+  : never;
+type StreamPart = StreamResponse["fullStream"] extends AsyncIterable<infer U>
+  ? U
+  : never;
+function parseStreamPart(part: StreamPart): {
+  full: string;
+  plain: string;
+} {
+  switch (part.type) {
+    case "error": {
+      const { isRetryable, data } = part.error as Record<string, unknown>;
+      return {
+        full: generateJSONCallout(
+          "FAILURE",
+          "Error",
+          { isRetryable, data },
+          true,
+        ),
+        plain: "",
+      };
+    }
+
+    case "tool-call":
+      return {
+        full: generateJSONCallout(
+          "IMPORTANT",
+          `Tool Call (${part.toolName})`,
+          part.args,
+          true,
+        ),
+        plain: "",
+      };
+
+    case "tool-result":
+      return {
+        full: generateJSONCallout(
+          "SUCCESS",
+          `Tool Result (${part.toolName})`,
+          part.result,
+          true,
+        ),
+        plain: "",
+      };
+
+    case "text-delta":
+      return {
+        full: part.textDelta,
+        plain: part.textDelta,
+      };
+
+    case "step-start":
+    case "step-finish":
+    case "finish":
+      return {
+        full: "",
+        plain: "",
+      };
+
+    default:
+      console.warn("Unknown part type:", part);
+      return {
+        full: `Unknown part type: ${part.type}`,
+        plain: "",
+      };
+  }
+}
+
+function generateJSONCallout(
   type: string,
   title: string,
   body: unknown,
   foldable: boolean,
-) => {
+) {
   return `> [!${type}]${foldable ? "-" : ""} ${title}
 > \`\`\`json
 > ${JSON.stringify(body, null, 2).replaceAll(/\n/g, "\n> ")}
 > \`\`\`
 
 `;
-};
+}
