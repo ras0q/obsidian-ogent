@@ -9,6 +9,7 @@ import { obsidianOpenNoteTool } from "../tools/obsidian-open-note.ts";
 import { obsidianSearchNotesTool } from "../tools/obsidian-search-notes.ts";
 import { obsidianTriggerCommandTool } from "../tools/obsidian-trigger-command.ts";
 import { obsidianUpdateNoteContentTool } from "../tools/obsidian-update-note-content.ts";
+import { obsidianOpenWikilinkTool } from "../tools/obsidian-open-wikilink.ts";
 
 export const buildObsidianAgent = (app: App, model: MastraLanguageModel) =>
   new Agent({
@@ -33,6 +34,7 @@ export const buildObsidianAgent = (app: App, model: MastraLanguageModel) =>
       "obsidian-get-note-content": obsidianGetNoteContentTool(app),
       "obsidian-list-commands": obsidianListCommandsTool(app),
       "obsidian-open-note": obsidianOpenNoteTool(app),
+      "obsidian-open-wikilink": obsidianOpenWikilinkTool(app),
       "obsidian-search-notes": obsidianSearchNotesTool(app),
       "obsidian-trigger-command": obsidianTriggerCommandTool(app),
       "obsidian-update-note-content": obsidianUpdateNoteContentTool(app),
