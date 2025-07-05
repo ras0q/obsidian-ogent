@@ -25,16 +25,15 @@ export class OgentSidebarView extends ItemView {
   override async onOpen() {
     const container = this.containerEl.children[1];
     container.empty();
+    container.addClass("ogent-chat-container");
 
-    const historyBox = container.createDiv();
-    historyBox.style.height = "80%";
-    historyBox.style.overflowY = "auto";
-
-    const inputContainer = container.createDiv({ cls: "setting-item" });
+    const historyBox = container.createDiv({ cls: "ogent-chat-history" });
+    const inputContainer = container.createDiv({
+      cls: "ogent-input-container",
+    });
 
     const textInput = new TextAreaComponent(inputContainer);
-    textInput.inputEl.style.width = "100%";
-    textInput.inputEl.style.minHeight = "3em";
+
     textInput.setPlaceholder("Enter message...");
 
     const sendButton = new ButtonComponent(inputContainer);
@@ -53,10 +52,10 @@ export class OgentSidebarView extends ItemView {
       textInput.setValue("");
       history.push({ role: "user", content: text });
 
-      const userEl = historyBox.createDiv();
+      const userEl = historyBox.createDiv({ cls: "ogent-user-message" });
       MarkdownRenderer.render(
         this.app,
-        `## 👨 User:\n${text}`,
+        text,
         userEl,
         ".",
         this,
@@ -64,24 +63,26 @@ export class OgentSidebarView extends ItemView {
 
       sendButton.setDisabled(true);
 
-      let displayText = "## 🤖 Assistant:\n";
+      let displayText = "";
       let plaintext = "";
       try {
         const agent = buildMastra(this.app).getAgent("obsidianAgent");
         if (!agent) throw new Error("Agent not found");
         const response = await agent.stream(history);
 
-        const responseEl = historyBox.createDiv();
+        const assistantEl = historyBox.createDiv({
+          cls: "ogent-assistant-message",
+        });
         for await (const part of response.fullStream) {
           const { full, plain } = parseStreamPart(part);
           displayText += full;
           plaintext += plain;
 
-          responseEl.empty();
+          assistantEl.empty();
           MarkdownRenderer.render(
             this.app,
             displayText,
-            responseEl,
+            assistantEl,
             ".",
             this,
           );
@@ -188,16 +189,28 @@ function parseStreamPart(part: StreamPart): {
   }
 }
 
+function generateCallout(
+  type: string,
+  title: string,
+  body: string,
+  foldable: boolean,
+) {
+  return `> [!${type}]${foldable ? "-" : ""} ${title}
+> ${body.replaceAll(/\n/g, "\n> ")}
+
+`;
+}
+
 function generateJSONCallout(
   type: string,
   title: string,
   body: unknown,
   foldable: boolean,
 ) {
-  return `> [!${type}]${foldable ? "-" : ""} ${title}
-> \`\`\`json
-> ${JSON.stringify(body, null, 2).replaceAll(/\n/g, "\n> ")}
-> \`\`\`
-
-`;
+  return generateCallout(
+    type,
+    title,
+    `\`\`\`json\n${JSON.stringify(body, null, 2)}\n\`\`\``,
+    foldable,
+  );
 }

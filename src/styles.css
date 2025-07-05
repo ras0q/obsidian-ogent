@@ -1,8 +1,45 @@
-/*
+.ogent-chat-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+  .ogent-chat-history {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-4-6);
+    overflow-y: auto;
+    flex: 1;
 
-If your plugin does not need CSS, delete this file.
+    > .ogent-user-message {
+      padding: var(--size-4-6);
+      border-radius: var(--callout-radius);
+      margin-left: auto;
+      margin-right: 0;
+      background-color: color-mix(
+        in srgb,
+        var(--interactive-accent) 30%,
+        transparent
+      );
 
-*/
+      & > :first-child {
+        margin-top: 0;
+      }
+      & > :last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .ogent-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-4-3);
+
+    > textarea {
+      width: 100%;
+      min-height: 5rem;
+      resize: block;
+    }
+  }
+}
