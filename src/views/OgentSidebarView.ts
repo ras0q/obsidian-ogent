@@ -85,7 +85,9 @@ export class OgentSidebarView extends ItemView {
           model,
         );
         if (!agent) throw new Error("Agent not found");
-        const response = await agent.stream(history);
+        const response = await agent.stream(
+          history.filter((msg) => msg.content !== ""),
+        );
 
         const assistantEl = historyBox.createDiv({
           cls: "ogent-assistant-message",
