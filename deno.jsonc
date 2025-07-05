@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "deno.window",
+      "dom"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "main.js"
+  ],
+  "imports": {
+    "@david/dax": "jsr:@david/dax@0.43.2",
+    "builtin-modules": "npm:builtin-modules@5.0.0",
+    "esbuild": "npm:esbuild@0.25.5",
+    "obsidian": "npm:obsidian@1.8.7"
+  },
+  "nodeModulesDir": "auto",
+  "tasks": {
+    "build": "deno -A ./esbuild.config.ts production",
+    "dev": "deno -A ./esbuild.config.ts"
+  }
+}
