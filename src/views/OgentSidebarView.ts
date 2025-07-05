@@ -87,6 +87,9 @@ export class OgentSidebarView extends ItemView {
         if (!agent) throw new Error("Agent not found");
         const response = await agent.stream(
           history.filter((msg) => msg.content !== ""),
+          {
+            maxSteps: 20,
+          },
         );
 
         const assistantEl = historyBox.createDiv({
@@ -105,6 +108,10 @@ export class OgentSidebarView extends ItemView {
             ".",
             this,
           );
+          historyBox.scrollTo({
+            top: historyBox.scrollHeight,
+            behavior: "smooth",
+          });
         }
         history.push({ role: "assistant", content: plaintext });
       } catch (e) {
