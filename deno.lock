@@ -2846,9 +2846,6 @@
     "path-parse@1.0.7": {
       "integrity": "sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw=="
     },
-    "pg-cloudflare@1.2.7": {
-      "integrity": "sha512-YgCtzMH0ptvZJslLM1ffsY4EuGaU0cx4XSdXLRFae8bPP4dS5xL1tNB3k2o/N64cHJpwU7dxKli/nZ2lUa5fLg=="
-    },
     "pg-int8@1.0.1": {
       "integrity": "sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw=="
     },
@@ -3213,6 +3210,36 @@
     "zod@3.25.74": {
       "integrity": "sha512-J8poo92VuhKjNknViHRAIuuN6li/EwFbAC8OedzI8uxpEPGiXHGQu9wemIAioIpqgfB4SySaJhdk0mH5Y4ICBg=="
     }
+  },
+  "redirects": {
+    "https://esm.sh/@ai-sdk/anthropic": "https://esm.sh/@ai-sdk/anthropic@1.2.12",
+    "https://esm.sh/@ai-sdk/azure": "https://esm.sh/@ai-sdk/azure@1.3.23",
+    "https://esm.sh/@ai-sdk/google": "https://esm.sh/@ai-sdk/google@1.2.22",
+    "https://esm.sh/@ai-sdk/openai": "https://esm.sh/@ai-sdk/openai@1.3.22",
+    "https://esm.sh/nanoid@^3.3.8/non-secure?target=denonext": "https://esm.sh/nanoid@3.3.11/non-secure?target=denonext",
+    "https://esm.sh/secure-json-parse@^2.7.0?target=denonext": "https://esm.sh/secure-json-parse@2.7.0?target=denonext",
+    "https://esm.sh/zod@^3.0.0?target=denonext": "https://esm.sh/zod@3.25.74?target=denonext"
+  },
+  "remote": {
+    "https://esm.sh/@ai-sdk/anthropic@1.2.12": "d26f6eb6ba7ea8abf07d61db50b21546c21afb1158fe5903e01ed6244b84c4b3",
+    "https://esm.sh/@ai-sdk/anthropic@1.2.12/denonext/anthropic.mjs": "865c149c0d082b06a36278c5d20cdac72af14d106d62d98871285294a508111b",
+    "https://esm.sh/@ai-sdk/azure@1.3.23": "c562fb0431e161969e07b91fac2be1718d5e4b2ccb637c2ec3cc8c3f9d1ccbab",
+    "https://esm.sh/@ai-sdk/azure@1.3.23/denonext/azure.mjs": "3b2eb6d150baa528f25d91e60a7f40bbc3b42bc395dbcf4197523c807642f26c",
+    "https://esm.sh/@ai-sdk/google@1.2.22": "914f0aace8830b2fbc77a724bb46a3aa8f69c4e97d188bc566985d660018b58d",
+    "https://esm.sh/@ai-sdk/google@1.2.22/denonext/google.mjs": "f3161261501f83bee3a0ebf836da194a6c9a3ea9cf36f0b37378e01ed281e1eb",
+    "https://esm.sh/@ai-sdk/openai@1.3.22": "3c0efb70f148d1803e8559cbff8a4c3420f4e3c970d9d3acc2a31501d75a8b9a",
+    "https://esm.sh/@ai-sdk/openai@1.3.22/denonext/internal.mjs": "ed705520e1413a6be384ac6ea65b9a7a6916729e19cc71b29be2177fe9b70f2e",
+    "https://esm.sh/@ai-sdk/openai@1.3.22/denonext/openai.mjs": "cde0b576c9923515249767d329985d6dcd32b8e2269badf334732c0046b3cc0b",
+    "https://esm.sh/@ai-sdk/provider-utils@2.2.8/denonext/provider-utils.mjs": "7f8714c3c05d83f58d4cafddd4bd00e5228b8aaf829238089d4275f84fb02ee3",
+    "https://esm.sh/@ai-sdk/provider@1.1.3/denonext/provider.mjs": "797a0e0099a8fd9cd41d80af78116c844baf8d0d7a841089effd6c2c28f26970",
+    "https://esm.sh/json-schema@0.4.0": "21a68e4e83b0441c3a90fa051c6b7c42d29926e4ff429745eebec153ac53cd7a",
+    "https://esm.sh/json-schema@0.4.0/denonext/json-schema.mjs": "95225c6fc709935fca00cfc112f2ab043d204f7bd07a8aaec75b1b5f24ca8bf6",
+    "https://esm.sh/nanoid@3.3.11/denonext/non-secure.mjs": "1f166118c1c4b4d4b5356ef0050fed87acf28cdb8a76813803fee72188f18b30",
+    "https://esm.sh/nanoid@3.3.11/non-secure?target=denonext": "ac0c34cc5f9846db51a5d868ce6ee815f831a19b1d57a1b8bae9226fc8d68dec",
+    "https://esm.sh/secure-json-parse@2.7.0/denonext/secure-json-parse.mjs": "bb9840bcb6fdce5857d7412b4c4e272b70044efac66a58cc78d8c97bdb56786d",
+    "https://esm.sh/secure-json-parse@2.7.0?target=denonext": "00b85213b6c18313c3de9c07941e27f9666f8c601818c221775a4f744430f89f",
+    "https://esm.sh/zod@3.25.74/denonext/zod.mjs": "ff5b69f6391249dfad98d5d5488064f82e3e24907f3c2a9dee8e894ad5bbc0bb",
+    "https://esm.sh/zod@3.25.74?target=denonext": "4f385cf10a7fad122130d37676b40177face36d0dd34e7997a343cb6e5f48af8"
   },
   "workspace": {
     "dependencies": [

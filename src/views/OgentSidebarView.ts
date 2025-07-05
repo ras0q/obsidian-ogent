@@ -9,9 +9,6 @@ import {
 import { buildMastra } from "../mastra/index.ts";
 import { buildObsidianAgent } from "../mastra/agents/obsidian-agent.ts";
 import OgentPlugin from "../main.ts";
-import path from "node:path";
-import { MastraLanguageModel } from "@mastra/core";
-import fs from "node:fs/promises";
 
 export class OgentSidebarView extends ItemView {
   static VIEW_TYPE = "ogent-chat-view";
@@ -155,40 +152,29 @@ export class OgentSidebarView extends ItemView {
     switch (provider) {
       case "openai": {
         globalThis.process.env.OPENAI_API_KEY = apiKey;
-        const { openai } = await this.dynamicImportModel("openai");
+        const { openai } = await import("https://esm.sh/@ai-sdk/openai");
         return openai(name);
       }
       case "google": {
         globalThis.process.env.GOOGLE_GENERATIVE_AI_API_KEY = apiKey;
-        const { google } = await this.dynamicImportModel("google");
+        const { google } = await import("https://esm.sh/@ai-sdk/google");
         return google(name);
       }
+      case "anthropic": {
+        globalThis.process.env.ANTHROPIC_API_KEY = apiKey;
+        const { anthropic } = await import("https://esm.sh/@ai-sdk/anthropic");
+        return anthropic(name);
+      }
+      case "azure": {
+        globalThis.process.env.AZURE_API_KEY = apiKey;
+        const { azure } = await import("https://esm.sh/@ai-sdk/azure");
+        return azure(name);
+      }
       default:
-        console.warn(`Unsupported provider: ${provider}`);
+        console.warn(
+          `Unsupported provider: ${provider}. Feel free to submit a PR to support it!`,
+        );
     }
-  }
-
-  // NOTE: This is a workaround to reduce bundle size.
-  // MUST check if the file is safe to import.
-  async dynamicImportModel(provider: string) {
-    const providerPath = path.join(
-      // @ts-ignore: app.vault.adapter.basePath is private in Obsidian
-      this.app.vault.adapter.basePath,
-      this.app.vault.configDir,
-      "plugins",
-      this.plugin.manifest.id,
-      "providers",
-      `${provider}.js`,
-    );
-    const code = await fs.readFile(providerPath, "utf-8");
-
-    const module: {
-      exports: Record<string, (model: string) => MastraLanguageModel>;
-    } = { exports: {} };
-    const wrapper = new Function("module", "exports", "require", code);
-    wrapper(module, module.exports, require);
-
-    return module.exports;
   }
 }
 

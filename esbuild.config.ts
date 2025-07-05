@@ -29,11 +29,10 @@ if (distDir.existsSync()) {
 
 // Separate providers/*.ts from main.ts so that you can install them individually
 const context = await esbuild.context({
-  entryPoints: ["./src/main.ts", "./src/styles.css", "./src/providers/*.ts"],
+  entryPoints: ["./src/main.ts", "./src/styles.css"],
   outdir: distDir.toString(),
   bundle: true,
   external: [
-    "./src/providers/*.ts",
     "obsidian",
     "electron",
     "@codemirror/autocomplete",
