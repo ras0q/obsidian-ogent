@@ -10,6 +10,7 @@
     gap: var(--size-4-6);
     overflow-y: auto;
     flex: 1;
+    user-select: text;
 
     > .ogent-user-message {
       width: 80%;
