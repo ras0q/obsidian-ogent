@@ -56,7 +56,7 @@ export class OgentSidebarView extends ItemView {
       const userEl = historyBox.createDiv();
       MarkdownRenderer.render(
         this.app,
-        `User:\n${text}`,
+        `## 👨 User:\n${text}`,
         userEl,
         ".",
         this,
@@ -66,29 +66,71 @@ export class OgentSidebarView extends ItemView {
       try {
         const agent = buildMastra(this.app).getAgent("obsidianAgent");
         if (!agent) throw new Error("Agent not found");
-        const response = await agent.stream(
-          history.flatMap((h) => {
-            return h.role === "user"
-              ? { role: "user" as const, content: h.content }
-              : [];
-          }),
-        );
+        const response = await agent.stream(history);
 
         const responseEl = historyBox.createDiv();
-        let responseText = "Assistant:\n";
-        for await (const chunk of response.textStream) {
-          responseText += chunk;
+        let displayText = "## 🤖 Assistant:\n";
+        let plaintext = "";
+        for await (const part of response.fullStream) {
+          switch (part.type) {
+            case "error": {
+              const { isRetryable, data } = part.error as Record<
+                string,
+                unknown
+              >;
+              displayText += generateJSONCallout(
+                "FAILURE",
+                "Error",
+                { isRetryable, data },
+                true,
+              );
+              break;
+            }
+            case "tool-call": {
+              displayText += generateJSONCallout(
+                "IMPORTANT",
+                `Tool Call (${part.toolName})`,
+                part.args,
+                true,
+              );
+              break;
+            }
+            case "tool-result": {
+              displayText += generateJSONCallout(
+                "SUCCESS",
+                `Tool Result (${part.toolName})`,
+                part.result,
+                true,
+              );
+              break;
+            }
+            case "text-delta": {
+              displayText += part.textDelta;
+              plaintext += part.textDelta;
+              break;
+            }
+            case "step-start":
+              break;
+            case "step-finish":
+              break;
+            case "finish":
+              break;
+            default:
+              console.warn("Unknown part type:", part);
+              displayText += `Unknown part type: ${part.type}`;
+              break;
+          }
 
           responseEl.empty();
           MarkdownRenderer.render(
             this.app,
-            responseText,
+            displayText,
             responseEl,
             ".",
             this,
           );
         }
-        history.push({ role: "assistant", content: responseText });
+        history.push({ role: "assistant", content: plaintext });
       } catch (e) {
         const errMsg = e instanceof Error ? e.message : String(e);
         history.push({ role: "assistant", content: `エラー: ${errMsg}` });
@@ -110,3 +152,17 @@ export class OgentSidebarView extends ItemView {
     return await Promise.resolve();
   }
 }
+
+const generateJSONCallout = (
+  type: string,
+  title: string,
+  body: unknown,
+  foldable: boolean,
+) => {
+  return `> [!${type}]${foldable ? "-" : ""} ${title}
+> \`\`\`json
+> ${JSON.stringify(body, null, 2).replaceAll(/\n/g, "\n> ")}
+> \`\`\`
+
+`;
+};
