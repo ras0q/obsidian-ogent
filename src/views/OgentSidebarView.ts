@@ -255,7 +255,8 @@ function generateCallout(
   body: string,
   foldable: boolean,
 ) {
-  return `> [!${type}]${foldable ? "-" : ""} ${title}
+  return `
+> [!${type}]${foldable ? "-" : ""} ${title}
 > ${body.replaceAll(/\n/g, "\n> ")}
 
 `;
