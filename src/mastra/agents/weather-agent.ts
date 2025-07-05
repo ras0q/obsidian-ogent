@@ -1,6 +1,5 @@
 import { google } from "@ai-sdk/google";
 import { Agent } from "@mastra/core/agent";
-import { Memory } from "@mastra/memory";
 import { weatherTool } from "../tools/weather-tool.ts";
 
 export const weatherAgent = new Agent({
@@ -21,10 +20,10 @@ export const weatherAgent = new Agent({
 `,
   model: google("gemini-2.5-flash"),
   tools: { weatherTool },
-  memory: new Memory({
-    // TODO: `file:` cannot be used
-    // storage: new LibSQLStore({
-    //   url: 'file:../mastra.db', // path is relative to the .mastra/output directory
-    // }),
-  }),
+  // memory: new Memory({
+  // TODO: `file:` cannot be used
+  // storage: new LibSQLStore({
+  //   url: 'file:../mastra.db', // path is relative to the .mastra/output directory
+  // }),
+  // }),
 });

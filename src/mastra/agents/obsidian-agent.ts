@@ -1,10 +1,8 @@
-import { google } from "@ai-sdk/google";
-import { Agent } from "@mastra/core/agent";
-import { Memory } from "@mastra/memory";
+import { Agent, type MastraLanguageModel } from "@mastra/core/agent";
 import { App } from "obsidian";
 import { buildObsidianTools } from "../tools/obsidian/obsidian-tool.ts";
 
-export const buildObsidianAgent = (app: App) =>
+export const buildObsidianAgent = (app: App, model: MastraLanguageModel) =>
   new Agent({
     name: "Obsidian Agent",
     instructions: `
@@ -18,12 +16,12 @@ export const buildObsidianAgent = (app: App) =>
 
       Use the Obsidian tools to perform tasks related to Obsidian.
 `,
-    model: google("gemini-2.5-flash"),
+    model,
     tools: buildObsidianTools(app),
-    memory: new Memory({
-      // TODO: `file:` cannot be used
-      // storage: new LibSQLStore({
-      //   url: 'file:../mastra.db', // path is relative to the .mastra/output directory
-      // }),
-    }),
+    // memory: new Memory({
+    // TODO: `file:` cannot be used
+    // storage: new LibSQLStore({
+    //   url: 'file:../mastra.db', // path is relative to the .mastra/output directory
+    // }),
+    // }),
   });

@@ -16,14 +16,24 @@ const distDir = prod
   ? rootDir.join("dist")
   // HACK: Avoid the ObsidianReviewBot's PR review "Obsidian's configuration directory isn't necessarily ..." 😅
   : vaultDir.join(".obsi" + "dian", "plugins", pluginName);
-await $`rm -rf ${distDir}`;
-await $`mkdir -p ${distDir}`;
+// Remove everything in distDir except data.json
+if (distDir.existsSync()) {
+  for await (const entry of distDir.readDir()) {
+    if (entry.name !== "data.json") {
+      await $`rm -rf ${distDir.join(entry.name)}`;
+    }
+  }
+} else {
+  await $`mkdir -p ${distDir}`;
+}
 
+// Separate providers/*.ts from main.ts so that you can install them individually
 const context = await esbuild.context({
-  entryPoints: ["./src/main.ts", "./src/styles.css"],
+  entryPoints: ["./src/main.ts", "./src/styles.css", "./src/providers/*.ts"],
   outdir: distDir.toString(),
   bundle: true,
   external: [
+    "./src/providers/*.ts",
     "obsidian",
     "electron",
     "@codemirror/autocomplete",
@@ -57,10 +67,13 @@ const context = await esbuild.context({
       },
     },
   ],
+  metafile: true,
 });
 
 if (prod) {
-  await context.rebuild();
+  const result = await context.rebuild();
+  await $`mkdir -p ./tmp`;
+  await $`echo ${JSON.stringify(result.metafile)} > ./tmp/esbuild-meta.json`;
   Deno.exit(0);
 } else {
   await context.watch();

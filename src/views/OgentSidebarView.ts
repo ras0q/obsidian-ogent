@@ -2,16 +2,24 @@ import {
   ButtonComponent,
   ItemView,
   MarkdownRenderer,
+  Notice,
   TextAreaComponent,
   WorkspaceLeaf,
 } from "obsidian";
 import { buildMastra } from "../mastra/index.ts";
+import { buildObsidianAgent } from "../mastra/agents/obsidian-agent.ts";
+import OgentPlugin from "../main.ts";
+import path from "node:path";
+import { MastraLanguageModel } from "@mastra/core";
+import fs from "node:fs/promises";
 
 export class OgentSidebarView extends ItemView {
   static VIEW_TYPE = "ogent-chat-view";
+  plugin: OgentPlugin;
 
-  constructor(leaf: WorkspaceLeaf) {
+  constructor(leaf: WorkspaceLeaf, plugin: OgentPlugin) {
     super(leaf);
+    this.plugin = plugin;
   }
 
   getViewType() {
@@ -46,6 +54,12 @@ export class OgentSidebarView extends ItemView {
 
     const history: { role: "user" | "assistant"; content: string }[] = [];
 
+    const model = await this.setupModel();
+    if (!model) {
+      new Notice("Ogent: Model cannot be set up.");
+      return;
+    }
+
     const sendMessage = async () => {
       const text = textInput.getValue().trim();
       if (!text) return;
@@ -66,7 +80,10 @@ export class OgentSidebarView extends ItemView {
       let displayText = "";
       let plaintext = "";
       try {
-        const agent = buildMastra(this.app).getAgent("obsidianAgent");
+        const agent = buildObsidianAgent(
+          this.app,
+          model,
+        );
         if (!agent) throw new Error("Agent not found");
         const response = await agent.stream(history);
 
@@ -115,6 +132,54 @@ export class OgentSidebarView extends ItemView {
     };
 
     return await Promise.resolve();
+  }
+
+  async setupModel() {
+    const { provider, name, apiKey } = this.plugin.settings.model;
+    if (!apiKey) {
+      new Notice(
+        "Ogent: API key is not set. Please configure it in the settings.",
+      );
+      return Promise.reject("API key is not set");
+    }
+
+    switch (provider) {
+      case "openai": {
+        globalThis.process.env.OPENAI_API_KEY = apiKey;
+        const { openai } = await this.dynamicImportModel("openai");
+        return openai(name);
+      }
+      case "google": {
+        globalThis.process.env.GOOGLE_GENERATIVE_AI_API_KEY = apiKey;
+        const { google } = await this.dynamicImportModel("google");
+        return google(name);
+      }
+      default:
+        console.warn(`Unsupported provider: ${provider}`);
+    }
+  }
+
+  // NOTE: This is a workaround to reduce bundle size.
+  // MUST check if the file is safe to import.
+  async dynamicImportModel(provider: string) {
+    const providerPath = path.join(
+      // @ts-ignore: app.vault.adapter.basePath is private in Obsidian
+      this.app.vault.adapter.basePath,
+      this.app.vault.configDir,
+      "plugins",
+      this.plugin.manifest.id,
+      "providers",
+      `${provider}.js`,
+    );
+    const code = await fs.readFile(providerPath, "utf-8");
+
+    const module: {
+      exports: Record<string, (model: string) => MastraLanguageModel>;
+    } = { exports: {} };
+    const wrapper = new Function("module", "exports", "require", code);
+    wrapper(module, module.exports, require);
+
+    return module.exports;
   }
 }
 

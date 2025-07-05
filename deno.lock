@@ -12,6 +12,7 @@
     "jsr:@std/path@1": "1.1.0",
     "jsr:@std/path@^1.1.0": "1.1.0",
     "npm:@ai-sdk/google@^1.2.22": "1.2.22_zod@3.25.74",
+    "npm:@ai-sdk/openai@^1.3.22": "1.3.22_zod@3.25.74",
     "npm:@mastra/core@~0.10.10": "0.10.10_zod@3.25.74_ai@4.3.16__zod@3.25.74_@opentelemetry+api@1.9.0_@opentelemetry+core@2.0.1__@opentelemetry+api@1.9.0_hono@4.8.4",
     "npm:@mastra/libsql@0.11": "0.11.0_@mastra+core@0.10.10__zod@3.25.74__ai@4.3.16___zod@3.25.74__@opentelemetry+api@1.9.0__@opentelemetry+core@2.0.1___@opentelemetry+api@1.9.0__hono@4.8.4_zod@3.25.74",
     "npm:@mastra/loggers@~0.10.3": "0.10.3_@mastra+core@0.10.10__zod@3.25.74__ai@4.3.16___zod@3.25.74__@opentelemetry+api@1.9.0__@opentelemetry+core@2.0.1___@opentelemetry+api@1.9.0__hono@4.8.4_zod@3.25.74",
@@ -71,6 +72,14 @@
   "npm": {
     "@ai-sdk/google@1.2.22_zod@3.25.74": {
       "integrity": "sha512-Ppxu3DIieF1G9pyQ5O1Z646GYR0gkC57YdBqXJ82qvCdhEhZHu0TWhmnOoeIWe2olSbuDeoOY+MfJrW8dzS3Hw==",
+      "dependencies": [
+        "@ai-sdk/provider",
+        "@ai-sdk/provider-utils",
+        "zod"
+      ]
+    },
+    "@ai-sdk/openai@1.3.22_zod@3.25.74": {
+      "integrity": "sha512-QwA+2EkG0QyjVR+7h6FE7iOu2ivNqAVMm9UJZkVxxTk5OIq5fFJDTEI/zICEMuHImTTXR2JjsL6EirJ28Jc4cw==",
       "dependencies": [
         "@ai-sdk/provider",
         "@ai-sdk/provider-utils",
@@ -3332,6 +3341,7 @@
     "dependencies": [
       "jsr:@david/dax@0.43.2",
       "npm:@ai-sdk/google@^1.2.22",
+      "npm:@ai-sdk/openai@^1.3.22",
       "npm:@mastra/core@~0.10.10",
       "npm:@mastra/libsql@0.11",
       "npm:@mastra/loggers@~0.10.3",

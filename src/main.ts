@@ -1,10 +1,11 @@
-import { Notice, Plugin, WorkspaceLeaf } from "obsidian";
+import { Plugin, WorkspaceLeaf } from "obsidian";
 import { OgentSidebarView } from "./views/OgentSidebarView.ts";
 import { OgentSettingTab } from "./views/OgentSettingTab.ts";
+import { MastraLanguageModel } from "@mastra/core";
 
 interface OgentPluginSettings {
   model: {
-    provider: string;
+    provider: "openai" | "google";
     name: string;
     apiKey?: string;
   };
@@ -19,6 +20,7 @@ const DEFAULT_SETTINGS: OgentPluginSettings = {
 
 export default class OgentPlugin extends Plugin {
   settings: OgentPluginSettings = DEFAULT_SETTINGS;
+  model: MastraLanguageModel | null = null;
 
   override async onload() {
     await this.loadSettings();
@@ -26,7 +28,7 @@ export default class OgentPlugin extends Plugin {
 
     this.registerView(
       OgentSidebarView.VIEW_TYPE,
-      (leaf) => new OgentSidebarView(leaf),
+      (leaf) => new OgentSidebarView(leaf, this),
     );
 
     this.addRibbonIcon(
@@ -44,35 +46,10 @@ export default class OgentPlugin extends Plugin {
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-    this.configureApiKey();
   }
 
   async saveSettings() {
     await this.saveData(this.settings);
-    this.configureApiKey();
-  }
-
-  configureApiKey() {
-    const apiKey = this.settings.model.apiKey;
-    if (!apiKey) {
-      new Notice(
-        "Ogent: API key is not set. Please configure it in the settings.",
-      );
-      return;
-    }
-
-    switch (this.settings.model.provider) {
-      case "openai":
-        globalThis.process.env.OPENAI_API_KEY = apiKey;
-        break;
-      case "google":
-        globalThis.process.env.GOOGLE_GENERATIVE_AI_API_KEY = apiKey;
-        break;
-      default:
-        console.warn(
-          `Unknown provider: ${this.settings.model.provider}`,
-        );
-    }
   }
 
   async activateView() {

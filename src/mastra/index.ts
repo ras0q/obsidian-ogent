@@ -1,17 +1,12 @@
 import { Mastra } from "@mastra/core/mastra";
 import { PinoLogger } from "@mastra/loggers";
 import { weatherWorkflow } from "./workflows/weather-workflow.ts";
-import { weatherAgent } from "./agents/weather-agent.ts";
-import { buildObsidianAgent } from "./agents/obsidian-agent.ts";
-import { App } from "obsidian";
+import { Agent } from "@mastra/core";
 
-export const buildMastra = (app: App) =>
+export const buildMastra = (agents: { [key: string]: Agent }) =>
   new Mastra({
     workflows: { weatherWorkflow },
-    agents: {
-      weatherAgent,
-      obsidianAgent: buildObsidianAgent(app),
-    },
+    agents,
     // TODO: `:memory:` cannot be used
     // storage: new LibSQLStore({
     //   // stores telemetry, evals, ... into memory storage, if it needs to persist, change to file:../mastra.db

@@ -11,6 +11,7 @@
   ],
   "imports": {
     "@ai-sdk/google": "npm:@ai-sdk/google@^1.2.22",
+    "@ai-sdk/openai": "npm:@ai-sdk/openai@^1.3.22",
     "@david/dax": "jsr:@david/dax@0.43.2",
     "@mastra/core": "npm:@mastra/core@^0.10.10",
     "@mastra/libsql": "npm:@mastra/libsql@^0.11.0",
