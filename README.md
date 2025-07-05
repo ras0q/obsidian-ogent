@@ -43,7 +43,7 @@ VSCode
   },
   "[json]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
-  },
+  },$$
   "[jsonc]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   },

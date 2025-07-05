@@ -16,7 +16,6 @@
     "npm:@mastra/libsql@0.11": "0.11.0_@mastra+core@0.10.10__zod@3.25.74__ai@4.3.16___zod@3.25.74__@opentelemetry+api@1.9.0__@opentelemetry+core@2.0.1___@opentelemetry+api@1.9.0__hono@4.8.4_zod@3.25.74",
     "npm:@mastra/loggers@~0.10.3": "0.10.3_@mastra+core@0.10.10__zod@3.25.74__ai@4.3.16___zod@3.25.74__@opentelemetry+api@1.9.0__@opentelemetry+core@2.0.1___@opentelemetry+api@1.9.0__hono@4.8.4_zod@3.25.74",
     "npm:@mastra/memory@~0.11.1": "0.11.1_@mastra+core@0.10.10__zod@3.25.74__ai@4.3.16___zod@3.25.74__@opentelemetry+api@1.9.0__@opentelemetry+core@2.0.1___@opentelemetry+api@1.9.0__hono@4.8.4_zod@3.25.74_pg@8.16.3",
-    "npm:builtin-modules@5.0.0": "5.0.0",
     "npm:esbuild@0.25.5": "0.25.5",
     "npm:obsidian@1.8.7": "1.8.7_@codemirror+state@6.5.2_@codemirror+view@6.37.1",
     "npm:zod@^3.25.74": "3.25.74"
@@ -2394,9 +2393,6 @@
         "ieee754"
       ]
     },
-    "builtin-modules@5.0.0": {
-      "integrity": "sha512-bkXY9WsVpY7CvMhKSR6pZilZu9Ln5WDrKVBUXf2S443etkmEO4V58heTecXcUIsNsi4Rx8JUO4NfX1IcQl4deg=="
-    },
     "call-bind-apply-helpers@1.0.2": {
       "integrity": "sha512-Sp1ablJ0ivDkSzjcaJdxEunN5/XvksFJ2sMBFfq6x0ryhQV/2b/KwFe21cMpmHtPOSij8K99/wSfoEuTObmuMQ==",
       "dependencies": [
@@ -3340,7 +3336,6 @@
       "npm:@mastra/libsql@0.11",
       "npm:@mastra/loggers@~0.10.3",
       "npm:@mastra/memory@~0.11.1",
-      "npm:builtin-modules@5.0.0",
       "npm:esbuild@0.25.5",
       "npm:obsidian@1.8.7",
       "npm:zod@^3.25.74"

@@ -1,4 +1,4 @@
-import builtinModules from "builtin-modules";
+import { builtinModules } from "node:module";
 import esbuild from "esbuild";
 import $ from "@david/dax";
 
