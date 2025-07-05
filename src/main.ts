@@ -5,7 +5,7 @@ import { MastraLanguageModel } from "@mastra/core";
 
 interface OgentPluginSettings {
   model: {
-    provider: "openai" | "google";
+    provider: string;
     name: string;
     apiKey?: string;
   };
