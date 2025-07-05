@@ -19,7 +19,7 @@ export class OgentSidebarView extends ItemView {
   }
 
   getDisplayText() {
-    return "Ogent AI Agent";
+    return "Ogent";
   }
 
   override async onOpen() {
@@ -52,10 +52,12 @@ export class OgentSidebarView extends ItemView {
       if (!text) return;
       textInput.setValue("");
       history.push({ role: "user", content: text });
+
+      const userEl = historyBox.createDiv();
       MarkdownRenderer.render(
         this.app,
-        `---\nuser:\n${text}`,
-        historyBox,
+        `User:\n${text}`,
+        userEl,
         ".",
         this,
       );
@@ -65,17 +67,19 @@ export class OgentSidebarView extends ItemView {
         const agent = mastra.getAgent("weatherAgent");
         if (!agent) throw new Error("Agent not found");
         const response = await agent.stream(
-          history
-            .filter((h) => h.role === "user")
-            .map((h) => ({ role: "user" as const, content: h.content })),
+          history.flatMap((h) => {
+            return h.role === "user"
+              ? { role: "user" as const, content: h.content }
+              : [];
+          }),
         );
 
         const responseEl = historyBox.createDiv();
-        let responseText = "---\nAssistant:\n";
+        let responseText = "Assistant:\n";
         for await (const chunk of response.textStream) {
           responseText += chunk;
 
-          responseEl.empty(); // Clear previous content
+          responseEl.empty();
           MarkdownRenderer.render(
             this.app,
             responseText,
@@ -88,6 +92,15 @@ export class OgentSidebarView extends ItemView {
       } catch (e) {
         const errMsg = e instanceof Error ? e.message : String(e);
         history.push({ role: "assistant", content: `エラー: ${errMsg}` });
+        const errorEl = historyBox.createDiv();
+        MarkdownRenderer.render(
+          this.app,
+          `Assistant:\nエラー: ${errMsg}`,
+          errorEl,
+          ".",
+          this,
+        );
+        console.error("Error during message processing:", e);
       } finally {
         sendButton.setDisabled(false);
         textInput.inputEl.focus();

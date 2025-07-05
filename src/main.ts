@@ -1,12 +1,6 @@
-import {
-  App,
-  Notice,
-  Plugin,
-  PluginSettingTab,
-  Setting,
-  WorkspaceLeaf,
-} from "obsidian";
+import { Notice, Plugin, WorkspaceLeaf } from "obsidian";
 import { OgentSidebarView } from "./views/OgentSidebarView.ts";
+import { OgentSettingTab } from "./views/OgentSettingTab.ts";
 
 interface OgentPluginSettings {
   model: {
@@ -30,19 +24,14 @@ export default class OgentPlugin extends Plugin {
     await this.loadSettings();
     this.addSettingTab(new OgentSettingTab(this.app, this));
 
-    globalThis.process.env.GOOGLE_GENERATIVE_AI_API_KEY =
-      this.settings.model.apiKey;
-
-    // サイドバーViewを登録
     this.registerView(
       OgentSidebarView.VIEW_TYPE,
       (leaf) => new OgentSidebarView(leaf),
     );
 
-    // リボンアイコンからサイドバーを開く
     this.addRibbonIcon(
-      "dice",
-      "Ogent AI Agent",
+      "bot-message-square",
+      "Open Ogent",
       (_: MouseEvent) => {
         this.activateView();
       },
@@ -51,25 +40,6 @@ export default class OgentPlugin extends Plugin {
 
   override onunload() {
     this.app.workspace.detachLeavesOfType(OgentSidebarView.VIEW_TYPE);
-  }
-
-  async activateView() {
-    const { workspace } = this.app;
-    let leaf: WorkspaceLeaf =
-      workspace.getLeavesOfType(OgentSidebarView.VIEW_TYPE)[0];
-    if (!leaf) {
-      const _leaf = workspace.getRightLeaf(false);
-      if (!_leaf) {
-        throw new Error("No right leaf available to create a new view.");
-      }
-      leaf = _leaf;
-
-      await leaf.setViewState({
-        type: OgentSidebarView.VIEW_TYPE,
-        active: true,
-      });
-    }
-    workspace.revealLeaf(leaf);
   }
 
   async loadSettings() {
@@ -104,59 +74,23 @@ export default class OgentPlugin extends Plugin {
         );
     }
   }
-}
 
-class OgentSettingTab extends PluginSettingTab {
-  plugin: OgentPlugin;
+  async activateView() {
+    const { workspace } = this.app;
+    let leaf: WorkspaceLeaf =
+      workspace.getLeavesOfType(OgentSidebarView.VIEW_TYPE)[0];
+    if (!leaf) {
+      const _leaf = workspace.getRightLeaf(false);
+      if (!_leaf) {
+        throw new Error("No right leaf available to create a new view.");
+      }
+      leaf = _leaf;
 
-  constructor(app: App, plugin: OgentPlugin) {
-    super(app, plugin);
-    this.plugin = plugin;
-  }
-
-  display(): void {
-    const { containerEl } = this;
-
-    containerEl.empty();
-
-    new Setting(containerEl)
-      .setName("Model Provider")
-      .setDesc("Select the model provider")
-      .addDropdown((dropdown) => {
-        dropdown
-          .addOption("google", "Google")
-          .addOption("openai", "OpenAI")
-          .setValue(this.plugin.settings.model.provider)
-          .onChange(async (value) => {
-            this.plugin.settings.model.provider = value;
-            await this.plugin.saveSettings();
-          });
+      await leaf.setViewState({
+        type: OgentSidebarView.VIEW_TYPE,
+        active: true,
       });
-
-    new Setting(containerEl)
-      .setName("Model Name")
-      .setDesc("Enter the model name")
-      .addText((text) =>
-        text
-          .setPlaceholder("e.g., gemini-2.5-flash")
-          .setValue(this.plugin.settings.model.name)
-          .onChange(async (value) => {
-            this.plugin.settings.model.name = value;
-            await this.plugin.saveSettings();
-          })
-      );
-
-    new Setting(containerEl)
-      .setName("API Key")
-      .setDesc("Enter your API key for the model provider")
-      .addText((text) =>
-        text
-          .setPlaceholder("Your API key")
-          .setValue(this.plugin.settings.model.apiKey || "")
-          .onChange(async (value) => {
-            this.plugin.settings.model.apiKey = value;
-            await this.plugin.saveSettings();
-          })
-      );
+    }
+    workspace.revealLeaf(leaf);
   }
 }
