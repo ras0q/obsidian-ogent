@@ -5,7 +5,7 @@ import {
   TextAreaComponent,
   WorkspaceLeaf,
 } from "obsidian";
-import { mastra } from "../mastra/index.ts";
+import { buildMastra } from "../mastra/index.ts";
 
 export class OgentSidebarView extends ItemView {
   static VIEW_TYPE = "ogent-chat-view";
@@ -64,7 +64,7 @@ export class OgentSidebarView extends ItemView {
 
       sendButton.setDisabled(true);
       try {
-        const agent = mastra.getAgent("weatherAgent");
+        const agent = buildMastra(this.app).getAgent("obsidianAgent");
         if (!agent) throw new Error("Agent not found");
         const response = await agent.stream(
           history.flatMap((h) => {

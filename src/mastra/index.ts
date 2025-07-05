@@ -2,17 +2,23 @@ import { Mastra } from "@mastra/core/mastra";
 import { PinoLogger } from "@mastra/loggers";
 import { weatherWorkflow } from "./workflows/weather-workflow.ts";
 import { weatherAgent } from "./agents/weather-agent.ts";
+import { buildObsidianAgent } from "./agents/obsidian-agent.ts";
+import { App } from "obsidian";
 
-export const mastra = new Mastra({
-  workflows: { weatherWorkflow },
-  agents: { weatherAgent },
-  // TODO: `:memory:` cannot be used
-  // storage: new LibSQLStore({
-  //   // stores telemetry, evals, ... into memory storage, if it needs to persist, change to file:../mastra.db
-  //   url: ":memory:",
-  // }),
-  logger: new PinoLogger({
-    name: "Mastra",
-    level: "info",
-  }),
-});
+export const buildMastra = (app: App) =>
+  new Mastra({
+    workflows: { weatherWorkflow },
+    agents: {
+      weatherAgent,
+      obsidianAgent: buildObsidianAgent(app),
+    },
+    // TODO: `:memory:` cannot be used
+    // storage: new LibSQLStore({
+    //   // stores telemetry, evals, ... into memory storage, if it needs to persist, change to file:../mastra.db
+    //   url: ":memory:",
+    // }),
+    logger: new PinoLogger({
+      name: "Mastra",
+      level: "info",
+    }),
+  });
