@@ -12,6 +12,7 @@
     flex: 1;
 
     > .ogent-user-message {
+      width: 80%;
       padding: var(--size-4-6);
       border-radius: var(--callout-radius);
       margin-left: auto;
