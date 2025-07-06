@@ -13,7 +13,7 @@ import { obsidianOpenWikilinkTool } from "../tools/obsidian-open-wikilink.ts";
 
 export const buildObsidianAgent = (app: App, model: MastraLanguageModel) =>
   new Agent({
-    name: "Obsidian Agent",
+    name: "Obsidian agent",
     instructions: `
       You are a helpful assistant that provides accurate information and can help plan activities based on user input.
       Your primary function is to assist users with Obsidian-related tasks. When responding:

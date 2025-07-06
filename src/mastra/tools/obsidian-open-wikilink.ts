@@ -6,10 +6,10 @@ export const obsidianOpenWikilinkTool = (app: App) =>
   createTool({
     id: "obsidian-open-wikilink",
     description:
-      "Open a note by wikilink (e.g. [[Note Name]]) in the workspace",
+      "Open a note by wikilink (e.g. [[Note name]]) in the workspace",
     inputSchema: z.object({
       wikilink: z.string().describe(
-        "The wikilink to open (e.g. [[Note Name]])",
+        "The wikilink to open (e.g. [[Note name]])",
       ),
     }),
     outputSchema: z.object({
