@@ -1,10 +1,9 @@
-import { App, ButtonComponent, PluginSettingTab, Setting } from "obsidian";
+import { App, PluginSettingTab, Setting } from "obsidian";
 import OgentPlugin from "../main.ts";
 import {
   OgentMcpServer,
   OgentMcpServerSettingModal,
 } from "./OgentMcpServerSettingModal.ts";
-import { MastraMCPServerDefinition } from "@mastra/mcp";
 
 export class OgentSettingTab extends PluginSettingTab {
   plugin: OgentPlugin;
