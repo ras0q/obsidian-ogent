@@ -3,6 +3,7 @@ export const supportedProviders = [
   "google",
   "anthropic",
   "azure",
+  "ollama",
   "custom",
 ] as const;
 export type ModelProvider = typeof supportedProviders[number];

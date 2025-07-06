@@ -12,8 +12,6 @@
     "jsr:@std/path@1": "1.1.0",
     "jsr:@std/path@^1.1.0": "1.1.0",
     "jsr:@std/semver@^1.0.5": "1.0.5",
-    "npm:@ai-sdk/google@^1.2.22": "1.2.22_zod@3.25.74",
-    "npm:@ai-sdk/openai@^1.3.22": "1.3.22_zod@3.25.74",
     "npm:@mastra/core@~0.10.10": "0.10.10_zod@3.25.74_ai@4.3.16__zod@3.25.74_@opentelemetry+api@1.9.0_@opentelemetry+core@2.0.1__@opentelemetry+api@1.9.0_hono@4.8.4",
     "npm:@mastra/libsql@0.11": "0.11.0_@mastra+core@0.10.10__zod@3.25.74__ai@4.3.16___zod@3.25.74__@opentelemetry+api@1.9.0__@opentelemetry+core@2.0.1___@opentelemetry+api@1.9.0__hono@4.8.4_zod@3.25.74",
     "npm:@mastra/loggers@~0.10.3": "0.10.3_@mastra+core@0.10.10__zod@3.25.74__ai@4.3.16___zod@3.25.74__@opentelemetry+api@1.9.0__@opentelemetry+core@2.0.1___@opentelemetry+api@1.9.0__hono@4.8.4_zod@3.25.74",
@@ -74,22 +72,6 @@
     }
   },
   "npm": {
-    "@ai-sdk/google@1.2.22_zod@3.25.74": {
-      "integrity": "sha512-Ppxu3DIieF1G9pyQ5O1Z646GYR0gkC57YdBqXJ82qvCdhEhZHu0TWhmnOoeIWe2olSbuDeoOY+MfJrW8dzS3Hw==",
-      "dependencies": [
-        "@ai-sdk/provider",
-        "@ai-sdk/provider-utils",
-        "zod"
-      ]
-    },
-    "@ai-sdk/openai@1.3.22_zod@3.25.74": {
-      "integrity": "sha512-QwA+2EkG0QyjVR+7h6FE7iOu2ivNqAVMm9UJZkVxxTk5OIq5fFJDTEI/zICEMuHImTTXR2JjsL6EirJ28Jc4cw==",
-      "dependencies": [
-        "@ai-sdk/provider",
-        "@ai-sdk/provider-utils",
-        "zod"
-      ]
-    },
     "@ai-sdk/provider-utils@2.2.8_zod@3.25.74": {
       "integrity": "sha512-fqhG+4sCVv8x7nFzYnFo19ryhAa3w096Kmc3hWxMQfW/TubPOmt3A6tYZhl4mUfQWWQMsuSkLrtjlWuXBVSGQA==",
       "dependencies": [
@@ -3592,7 +3574,10 @@
     "https://esm.sh/@ai-sdk/azure": "https://esm.sh/@ai-sdk/azure@1.3.23",
     "https://esm.sh/@ai-sdk/google": "https://esm.sh/@ai-sdk/google@1.2.22",
     "https://esm.sh/@ai-sdk/openai": "https://esm.sh/@ai-sdk/openai@1.3.22",
+    "https://esm.sh/@ai-sdk/provider-utils@^2.0.0?target=denonext": "https://esm.sh/@ai-sdk/provider-utils@2.2.8?target=denonext",
+    "https://esm.sh/@ai-sdk/provider@^1.0.0?target=denonext": "https://esm.sh/@ai-sdk/provider@1.1.3?target=denonext",
     "https://esm.sh/nanoid@^3.3.8/non-secure?target=denonext": "https://esm.sh/nanoid@3.3.11/non-secure?target=denonext",
+    "https://esm.sh/ollama-ai-provider": "https://esm.sh/ollama-ai-provider@1.2.0",
     "https://esm.sh/secure-json-parse@^2.7.0?target=denonext": "https://esm.sh/secure-json-parse@2.7.0?target=denonext",
     "https://esm.sh/zod@^3.0.0?target=denonext": "https://esm.sh/zod@3.25.74?target=denonext"
   },
@@ -3607,11 +3592,17 @@
     "https://esm.sh/@ai-sdk/openai@1.3.22/denonext/internal.mjs": "ed705520e1413a6be384ac6ea65b9a7a6916729e19cc71b29be2177fe9b70f2e",
     "https://esm.sh/@ai-sdk/openai@1.3.22/denonext/openai.mjs": "cde0b576c9923515249767d329985d6dcd32b8e2269badf334732c0046b3cc0b",
     "https://esm.sh/@ai-sdk/provider-utils@2.2.8/denonext/provider-utils.mjs": "7f8714c3c05d83f58d4cafddd4bd00e5228b8aaf829238089d4275f84fb02ee3",
+    "https://esm.sh/@ai-sdk/provider-utils@2.2.8?target=denonext": "f65206da6b90d66c9b0aede446b412782a310c73b17909010aef5a2873125efa",
     "https://esm.sh/@ai-sdk/provider@1.1.3/denonext/provider.mjs": "797a0e0099a8fd9cd41d80af78116c844baf8d0d7a841089effd6c2c28f26970",
+    "https://esm.sh/@ai-sdk/provider@1.1.3?target=denonext": "f05e6a468626f9b68ce2c4475167898fd52e292dda24ff33730621a8ea05f1a3",
     "https://esm.sh/json-schema@0.4.0": "21a68e4e83b0441c3a90fa051c6b7c42d29926e4ff429745eebec153ac53cd7a",
     "https://esm.sh/json-schema@0.4.0/denonext/json-schema.mjs": "95225c6fc709935fca00cfc112f2ab043d204f7bd07a8aaec75b1b5f24ca8bf6",
     "https://esm.sh/nanoid@3.3.11/denonext/non-secure.mjs": "1f166118c1c4b4d4b5356ef0050fed87acf28cdb8a76813803fee72188f18b30",
     "https://esm.sh/nanoid@3.3.11/non-secure?target=denonext": "ac0c34cc5f9846db51a5d868ce6ee815f831a19b1d57a1b8bae9226fc8d68dec",
+    "https://esm.sh/ollama-ai-provider@1.2.0": "ccf2e97d45176f4d0a829793021212aaff1c05dc65892fb22ade0a5806028675",
+    "https://esm.sh/ollama-ai-provider@1.2.0/denonext/ollama-ai-provider.mjs": "93829b9fb64cce3ee948b1b9094815b3386a483c95da7f66db71e1ca320afed9",
+    "https://esm.sh/partial-json@0.1.7/denonext/options.mjs": "7517d5c06fd2dfcef8ded42b8a51a362a9ec5b163595ef371572d2458f2605d8",
+    "https://esm.sh/partial-json@0.1.7/denonext/partial-json.mjs": "2e917cb497a098211804e6bbe6f3d7bbe8ece1c0ce10539ccc2d39a50d7127cd",
     "https://esm.sh/secure-json-parse@2.7.0/denonext/secure-json-parse.mjs": "bb9840bcb6fdce5857d7412b4c4e272b70044efac66a58cc78d8c97bdb56786d",
     "https://esm.sh/secure-json-parse@2.7.0?target=denonext": "00b85213b6c18313c3de9c07941e27f9666f8c601818c221775a4f744430f89f",
     "https://esm.sh/zod@3.25.74/denonext/zod.mjs": "ff5b69f6391249dfad98d5d5488064f82e3e24907f3c2a9dee8e894ad5bbc0bb",
@@ -3621,8 +3612,6 @@
     "dependencies": [
       "jsr:@david/dax@0.43.2",
       "jsr:@std/semver@^1.0.5",
-      "npm:@ai-sdk/google@^1.2.22",
-      "npm:@ai-sdk/openai@^1.3.22",
       "npm:@mastra/core@~0.10.10",
       "npm:@mastra/libsql@0.11",
       "npm:@mastra/loggers@~0.10.3",

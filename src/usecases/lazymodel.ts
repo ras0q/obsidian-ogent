@@ -34,7 +34,12 @@ export async function setupModel(
       globalThis.process.env.AZURE_API_KEY = apiKey;
       return azure(name);
     }
-    default: {
+    case "ollama": {
+      const { ollama } = await import("https://esm.sh/ollama-ai-provider");
+      // Ollama does not require an API key
+      return ollama(name);
+    }
+    case "custom": {
       if (
         !customProvider || !customProvider.name || !customProvider.apiKeyName
       ) {
@@ -51,6 +56,13 @@ export async function setupModel(
       globalThis.process.env[customProvider.apiKeyName ?? "API_KEY"] = apiKey;
       const providerFunc = module[customProvider.name];
       return providerFunc(name);
+    }
+    default: {
+      console.log(provider)
+      new Notice(
+        "Ogent: Unsupported model provider. Please check your settings.",
+      );
+      return Promise.reject("Unsupported model provider");
     }
   }
 }
