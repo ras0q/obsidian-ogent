@@ -58,7 +58,6 @@ export async function setupModel(
       return providerFunc(name);
     }
     default: {
-      console.log(provider)
       new Notice(
         "Ogent: Unsupported model provider. Please check your settings.",
       );
