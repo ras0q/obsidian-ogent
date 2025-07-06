@@ -51,7 +51,6 @@ export class OgentSettingTab extends PluginSettingTab {
               this.plugin.settings.model.apiKey = "";
               this.plugin.settings.model.customProvider = {};
               await this.plugin.saveSettings();
-              this.display();
             } else {
               new Notice(
                 `Ogent: Unsupported model provider "${value}". Please select a valid provider.`,
@@ -75,7 +74,6 @@ export class OgentSettingTab extends PluginSettingTab {
             .onChange(async (value) => {
               this.plugin.settings.model.customProvider.name = value;
               await this.plugin.saveSettings();
-              this.display();
             })
         );
 
@@ -95,7 +93,6 @@ export class OgentSettingTab extends PluginSettingTab {
             .onChange(async (value) => {
               this.plugin.settings.model.customProvider.apiKeyName = value;
               await this.plugin.saveSettings();
-              this.display();
             })
         );
     }
