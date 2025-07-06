@@ -49,3 +49,7 @@
 .ogent-toolset-title {
   display: inline-block;
 }
+
+.setting-item-sub {
+  margin-left: 1.5rem;
+}

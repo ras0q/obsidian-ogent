@@ -3,10 +3,15 @@ import { OgentSidebarView } from "./views/OgentSidebarView.ts";
 import { OgentSettingTab } from "./views/OgentSettingTab.ts";
 import { MastraLanguageModel } from "@mastra/core";
 import type { OgentMcpServer } from "./views/OgentMcpServerSettingModal.ts";
+import { ModelProvider } from "./types/types.ts";
 
-interface OgentPluginSettings {
+export interface OgentPluginSettings {
   model: {
-    provider: string;
+    provider: ModelProvider;
+    customProvider: {
+      name?: string;
+      apiKeyName?: string;
+    };
     name: string;
     apiKey?: string;
   };
@@ -17,6 +22,7 @@ interface OgentPluginSettings {
 const DEFAULT_SETTINGS: OgentPluginSettings = {
   model: {
     provider: "google",
+    customProvider: {},
     name: "gemini-2.5-flash",
   },
   mcpServers: {},

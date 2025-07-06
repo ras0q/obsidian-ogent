@@ -1,9 +1,10 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import OgentPlugin from "../main.ts";
 import {
   OgentMcpServer,
   OgentMcpServerSettingModal,
 } from "./OgentMcpServerSettingModal.ts";
+import { ModelProvider, supportedProviders } from "../types/types.ts";
 
 export class OgentSettingTab extends PluginSettingTab {
   plugin: OgentPlugin;
@@ -28,17 +29,73 @@ export class OgentSettingTab extends PluginSettingTab {
 
     new Setting(modelSettingsEl)
       .setName("Provider")
-      .setDesc("Select the model provider")
-      .addDropdown((dropdown) => {
+      .setDesc("Select the model provider.")
+      .addDropdown((dropdown) =>
         dropdown
-          .addOption("google", "Google")
-          .addOption("openai", "OpenAI")
+          .addOptions(
+            Object.fromEntries(
+              supportedProviders.map((provider) => [
+                provider,
+                provider.charAt(0).toUpperCase() + provider.slice(1),
+              ]),
+            ),
+          )
           .setValue(this.plugin.settings.model.provider)
           .onChange(async (value) => {
-            this.plugin.settings.model.provider = value;
-            await this.plugin.saveSettings();
-          });
-      });
+            const provider = value as ModelProvider;
+            if (supportedProviders.includes(provider)) {
+              this.plugin.settings.model.provider = provider;
+              this.plugin.settings.model.apiKey = "";
+              this.plugin.settings.model.customProvider = {};
+              await this.plugin.saveSettings();
+              this.display();
+            } else {
+              new Notice(
+                `Ogent: Unsupported model provider "${value}". Please select a valid provider.`,
+              );
+            }
+          })
+      );
+
+    if (this.plugin.settings.model.provider === "custom") {
+      new Setting(modelSettingsEl)
+        .setClass("setting-item-sub")
+        .setName("Custom provider")
+        .setDesc(
+          "Enter a custom model provider name. This will override the default provider.\n" +
+            "See https://ai-sdk.dev/docs/foundations/providers-and-models",
+        )
+        .addText((text) =>
+          text
+            .setPlaceholder("e.g., mistral")
+            .setValue(this.plugin.settings.model.customProvider.name || "")
+            .onChange(async (value) => {
+              this.plugin.settings.model.customProvider.name = value;
+              await this.plugin.saveSettings();
+              this.display();
+            })
+        );
+
+      new Setting(modelSettingsEl)
+        .setClass("setting-item-sub")
+        .setName("Custom API key name")
+        .setDesc(
+          "Enter the environment variable name for the custom provider's API key.\n" +
+            "This is used to set the API key for the custom provider.",
+        )
+        .addText((text) =>
+          text
+            .setPlaceholder("e.g., MISTRAL_API_KEY")
+            .setValue(
+              this.plugin.settings.model.customProvider.apiKeyName || "",
+            )
+            .onChange(async (value) => {
+              this.plugin.settings.model.customProvider.apiKeyName = value;
+              await this.plugin.saveSettings();
+              this.display();
+            })
+        );
+    }
 
     new Setting(modelSettingsEl)
       .setName("Name")
