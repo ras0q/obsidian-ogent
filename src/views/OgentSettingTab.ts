@@ -18,6 +18,9 @@ export class OgentSettingTab extends PluginSettingTab {
     this.containerEl.empty();
     this.addModelSettings();
     this.addMCPServersSettings();
+    if (this.plugin.settings.disabledToolIds.length > 0) {
+      this.addDisabledMcpToolsSettings();
+    }
   }
 
   addModelSettings() {
@@ -199,11 +202,18 @@ export class OgentSettingTab extends PluginSettingTab {
             });
         },
       );
+  }
+
+  addDisabledMcpToolsSettings() {
+    const disabledToolsEl = this.containerEl.createEl("section");
+
+    new Setting(disabledToolsEl)
+      .setHeading()
+      .setName("Disabled MCP tools");
 
     for (const disabledToolId of this.plugin.settings.disabledToolIds) {
-      new Setting(mcpServersEl)
-        .setName(`Disabled Tool ID: ${disabledToolId}`)
-        .setDesc("This tool is currently disabled")
+      new Setting(disabledToolsEl)
+        .setName(`${disabledToolId}`)
         .addButton((button) => {
           button
             .setWarning()
