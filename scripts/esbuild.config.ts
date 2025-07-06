@@ -4,7 +4,7 @@ import $ from "@david/dax";
 
 const prod = Deno.args[0] === "production";
 
-const rootDir = $.path(import.meta.dirname!);
+const rootDir = $.path(import.meta.dirname!).parent()!;
 const pluginName = rootDir.basename().replace(/^obsidian-?/, "");
 const vaultDir = rootDir.join(`vault-for-${pluginName}`);
 if (!vaultDir.existsSync()) {

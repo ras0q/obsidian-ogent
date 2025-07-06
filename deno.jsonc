@@ -22,8 +22,8 @@
   },
   "nodeModulesDir": "auto",
   "tasks": {
-    "build": "deno -A ./esbuild.config.ts production",
-    "dev": "deno -A ./esbuild.config.ts",
+    "build": "deno -A ./scripts/esbuild.config.ts production",
+    "dev": "deno -A ./scripts/esbuild.config.ts",
     "fix": "deno check . && deno fmt . && deno lint --fix .",
     "bump": "deno -A ./scripts/bump.ts"
   }
