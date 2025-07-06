@@ -4,6 +4,10 @@ Run LLM agents in [Obsidian].
 
 ![demo.gif](./demo.gif)
 
+> [!WARNING]
+> This plugin is v1.y.z, but the API is still in flux. Breaking changes may
+> occur in future releases.
+
 ## Installation
 
 ### Using BRAT
