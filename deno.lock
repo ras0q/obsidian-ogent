@@ -11,6 +11,7 @@
     "jsr:@std/io@0.225": "0.225.2",
     "jsr:@std/path@1": "1.1.0",
     "jsr:@std/path@^1.1.0": "1.1.0",
+    "jsr:@std/semver@^1.0.5": "1.0.5",
     "npm:@ai-sdk/google@^1.2.22": "1.2.22_zod@3.25.74",
     "npm:@ai-sdk/openai@^1.3.22": "1.3.22_zod@3.25.74",
     "npm:@mastra/core@~0.10.10": "0.10.10_zod@3.25.74_ai@4.3.16__zod@3.25.74_@opentelemetry+api@1.9.0_@opentelemetry+core@2.0.1__@opentelemetry+api@1.9.0_hono@4.8.4",
@@ -67,6 +68,9 @@
     },
     "@std/path@1.1.0": {
       "integrity": "ddc94f8e3c275627281cbc23341df6b8bcc874d70374f75fec2533521e3d6886"
+    },
+    "@std/semver@1.0.5": {
+      "integrity": "529f79e83705714c105ad0ba55bec0f9da0f24d2f726b6cc1c15e505cc2c0624"
     }
   },
   "npm": {
@@ -3616,6 +3620,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@david/dax@0.43.2",
+      "jsr:@std/semver@^1.0.5",
       "npm:@ai-sdk/google@^1.2.22",
       "npm:@ai-sdk/openai@^1.3.22",
       "npm:@mastra/core@~0.10.10",
