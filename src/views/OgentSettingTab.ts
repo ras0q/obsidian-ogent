@@ -48,7 +48,6 @@ export class OgentSettingTab extends PluginSettingTab {
             const provider = value as ModelProvider;
             if (supportedProviders.includes(provider)) {
               this.plugin.settings.model.provider = provider;
-              this.plugin.settings.model.apiKey = "";
               this.plugin.settings.model.customProvider = {};
               await this.plugin.saveSettings();
             } else {
@@ -116,9 +115,9 @@ export class OgentSettingTab extends PluginSettingTab {
       .addText((text) =>
         text
           .setPlaceholder("Your API key")
-          .setValue(this.plugin.settings.model.apiKey || "")
+          .setValue(this.app.loadLocalStorage("ogent-api-key") || "")
           .onChange(async (value) => {
-            this.plugin.settings.model.apiKey = value;
+            this.app.saveLocalStorage("ogent-api-key", value);
             await this.plugin.saveSettings();
           })
       );

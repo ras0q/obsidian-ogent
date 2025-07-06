@@ -13,7 +13,6 @@ export interface OgentPluginSettings {
       apiKeyName?: string;
     };
     name: string;
-    apiKey?: string;
   };
   mcpServers: Record<OgentMcpServer["name"], Omit<OgentMcpServer, "name">>;
   disabledToolIds: string[];

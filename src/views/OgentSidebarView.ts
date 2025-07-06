@@ -84,7 +84,15 @@ export class OgentSidebarView extends ItemView {
 
     const history: { role: "user" | "assistant"; content: string }[] = [];
 
-    const model = await setupModel(this.plugin.settings.model);
+    const apiKey = this.app.loadLocalStorage("ogent-api-key");
+    if (!apiKey) {
+      new Notice(
+        "Ogent: API key is not set. Please configure it in the settings.",
+      );
+      return;
+    }
+
+    const model = await setupModel(this.plugin.settings.model, apiKey);
     if (!model) {
       new Notice("Ogent: Model cannot be set up.");
       return;

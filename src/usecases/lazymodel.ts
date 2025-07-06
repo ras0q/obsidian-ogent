@@ -4,14 +4,9 @@ import { OgentPluginSettings } from "../main.ts";
 
 export async function setupModel(
   modelSettings: OgentPluginSettings["model"],
+  apiKey: string,
 ): Promise<MastraLanguageModel> {
-  const { provider, customProvider, name, apiKey } = modelSettings;
-  if (!apiKey) {
-    new Notice(
-      "Ogent: API key is not set. Please configure it in the settings.",
-    );
-    return Promise.reject("API key is not set");
-  }
+  const { provider, customProvider, name } = modelSettings;
 
   switch (provider) {
     case "openai": {
