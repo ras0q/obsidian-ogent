@@ -2,6 +2,7 @@ import { Plugin, WorkspaceLeaf } from "obsidian";
 import { OgentSidebarView } from "./views/OgentSidebarView.ts";
 import { OgentSettingTab } from "./views/OgentSettingTab.ts";
 import { MastraLanguageModel } from "@mastra/core";
+import type { OgentMcpServer } from "./views/OgentMcpServerSettingModal.ts";
 
 interface OgentPluginSettings {
   model: {
@@ -9,6 +10,7 @@ interface OgentPluginSettings {
     name: string;
     apiKey?: string;
   };
+  mcpServers: Record<OgentMcpServer["name"], Omit<OgentMcpServer, "name">>;
 }
 
 const DEFAULT_SETTINGS: OgentPluginSettings = {
@@ -16,6 +18,7 @@ const DEFAULT_SETTINGS: OgentPluginSettings = {
     provider: "google",
     name: "gemini-2.5-flash",
   },
+  mcpServers: {},
 };
 
 export default class OgentPlugin extends Plugin {

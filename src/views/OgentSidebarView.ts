@@ -9,6 +9,7 @@ import {
 import { buildMastra } from "../mastra/index.ts";
 import { buildObsidianAgent } from "../mastra/agents/obsidian-agent.ts";
 import OgentPlugin from "../main.ts";
+import { MCPClient } from "@mastra/mcp";
 
 export class OgentSidebarView extends ItemView {
   static VIEW_TYPE = "ogent-chat-view";
@@ -77,15 +78,21 @@ export class OgentSidebarView extends ItemView {
       let displayText = "";
       let plaintext = "";
       try {
+        const mcpClient = new MCPClient({
+          servers: this.plugin.settings.mcpServers,
+        });
+        const toolsets = await mcpClient.getToolsets();
+
         const agent = buildObsidianAgent(
           this.app,
           model,
         );
-        if (!agent) throw new Error("Agent not found");
+
         const response = await agent.stream(
           history.filter((msg) => msg.content !== ""),
           {
             maxSteps: 20,
+            toolsets,
           },
         );
 

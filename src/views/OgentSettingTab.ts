@@ -1,5 +1,10 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, ButtonComponent, PluginSettingTab, Setting } from "obsidian";
 import OgentPlugin from "../main.ts";
+import {
+  OgentMcpServer,
+  OgentMcpServerSettingModal,
+} from "./OgentMcpServerSettingModal.ts";
+import { MastraMCPServerDefinition } from "@mastra/mcp";
 
 export class OgentSettingTab extends PluginSettingTab {
   plugin: OgentPlugin;
@@ -10,12 +15,20 @@ export class OgentSettingTab extends PluginSettingTab {
   }
 
   display(): void {
-    const { containerEl } = this;
+    this.containerEl.empty();
+    this.addModelSettings();
+    this.addMCPServersSettings();
+  }
 
-    containerEl.empty();
+  addModelSettings() {
+    const modelSettingsEl = this.containerEl.createEl("section");
 
-    new Setting(containerEl)
-      .setName("Model Provider")
+    new Setting(modelSettingsEl)
+      .setHeading()
+      .setName("Model settings");
+
+    new Setting(modelSettingsEl)
+      .setName("Provider")
       .setDesc("Select the model provider")
       .addDropdown((dropdown) => {
         dropdown
@@ -28,8 +41,8 @@ export class OgentSettingTab extends PluginSettingTab {
           });
       });
 
-    new Setting(containerEl)
-      .setName("Model Name")
+    new Setting(modelSettingsEl)
+      .setName("Name")
       .setDesc("Enter the model name")
       .addText((text) =>
         text
@@ -41,8 +54,8 @@ export class OgentSettingTab extends PluginSettingTab {
           })
       );
 
-    new Setting(containerEl)
-      .setName("API Key")
+    new Setting(modelSettingsEl)
+      .setName("API key")
       .setDesc("Enter your API key for the model provider")
       .addText((text) =>
         text
@@ -52,6 +65,83 @@ export class OgentSettingTab extends PluginSettingTab {
             this.plugin.settings.model.apiKey = value;
             await this.plugin.saveSettings();
           })
+      );
+  }
+
+  addMCPServersSettings() {
+    const mcpServersEl = this.containerEl.createEl("section");
+
+    const saveMcpServer = async (mcpServer: OgentMcpServer) => {
+      console.log("Saving MCP server:", mcpServer);
+      const { name, command, args, env } = mcpServer;
+      this.plugin.settings.mcpServers[name] = { command, args, env };
+      await this.plugin.saveSettings();
+      this.display();
+    };
+
+    new Setting(mcpServersEl)
+      .setHeading()
+      .setName("MCP servers")
+      .addButton((button) => {
+        button
+          .setCta()
+          .setIcon("plus")
+          .setTooltip("Add MCP server")
+          .onClick(() => {
+            const modal = new OgentMcpServerSettingModal(
+              this.app,
+              { name: "", command: "", args: [], env: {} },
+              saveMcpServer,
+            );
+            modal.open();
+          });
+      });
+
+    Object.entries(this.plugin.settings.mcpServers)
+      .toSorted(([nameA], [nameB]) => nameA.localeCompare(nameB))
+      .forEach(
+        ([serverName, serverConfig]) => {
+          new Setting(mcpServersEl)
+            .setName(serverName)
+            .setDesc("Configure MCP server settings")
+            .addButton((button) => {
+              button
+                .setIcon("pencil")
+                .setTooltip("Edit MCP server")
+                .onClick(() => {
+                  const modal = new OgentMcpServerSettingModal(
+                    this.app,
+                    { name: serverName, ...serverConfig },
+                    (mcpServer) => {
+                      if (mcpServer.name !== serverName) {
+                        delete this.plugin.settings.mcpServers[serverName];
+                      }
+
+                      saveMcpServer(mcpServer);
+                    },
+                  );
+                  modal.open();
+                });
+            })
+            .addButton((button) => {
+              button
+                .setWarning()
+                .setIcon("trash")
+                .setTooltip("Delete MCP server")
+                .onClick(async () => {
+                  const confirmDelete = confirm(
+                    `Are you sure you want to delete the MCP server "${serverName}"? This action cannot be undone.`,
+                  );
+                  if (!confirmDelete) {
+                    return;
+                  }
+
+                  delete this.plugin.settings.mcpServers[serverName];
+                  await this.plugin.saveSettings();
+                  this.display();
+                });
+            });
+        },
       );
   }
 }
