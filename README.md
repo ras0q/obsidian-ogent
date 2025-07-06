@@ -1,6 +1,19 @@
-# Obsidian Plugin Template (with Deno)
+# Obsidian Ogent
 
-This is a sample plugin for [Obsidian].
+Run LLM agents in [Obsidian].
+
+![demo.gif](./demo.gif)
+
+## Installation
+
+### Using BRAT
+
+1. **Install and Enable** the [BRAT](https://obsidian.md/plugins?id=brat) plugin
+   in Obsidian
+2. Go to the BRAT plugin settings
+3. Add this plugin from the `Add Plugin` button
+
+## Development
 
 You can use [Deno] for almost everything in development!
 
@@ -8,22 +21,7 @@ You can use [Deno] for almost everything in development!
 - Formatter: **Deno**
 - Linter: **Deno**
 - Type Checker: **Deno**
-- Bundler: **esbuild** (`deno bundle` is now deprecated 😅)
-
-See [obsidianmd/obsidian-sample-plugin] for details.
-
-## Setup
-
-**To simplify the explanation, we assume the plugin name is `my-feature`.**
-
-1. Create a new repository `<yourname>/obsidian-my-feature` from this template
-2. Clone the repository
-3. Rename variables in `manifest.json` and `main.ts`
-   - `id` should be `my-feature` (DON'T include `obsidian-` prefix)
-   - `name` should be `My Feature`
-   - The plugin class name should be `MyFeaturePlugin`
-
-## Development
+- Bundler: **esbuild**
 
 1. Install [Deno]
 2. Run `deno task dev`, which will:
@@ -71,5 +69,4 @@ VSCode
 
 [Obsidian]: https://obsidian.md
 [Deno]: https://deno.com
-[obsidianmd/obsidian-sample-plugin]: https://github.com/obsidianmd/obsidian-sample-plugin
 [sample vault]: https://github.com/kepano/kepano-obsidian
