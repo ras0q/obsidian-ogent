@@ -16,6 +16,7 @@ export interface OgentPluginSettings {
   };
   mcpServers: Record<OgentMcpServer["name"], Omit<OgentMcpServer, "name">>;
   disabledToolIds: string[];
+  instructions: string;
 }
 
 const DEFAULT_SETTINGS: OgentPluginSettings = {
@@ -26,6 +27,18 @@ const DEFAULT_SETTINGS: OgentPluginSettings = {
   },
   mcpServers: {},
   disabledToolIds: [],
+  instructions:
+    `You are a helpful assistant that provides accurate information and can help plan activities based on user input.
+Your primary function is to assist users with Obsidian-related tasks. When responding:
+- On the initial question, use the \`obsidian-list-commands\` tool to get a list of available commands in Obsidian and clarify what the assistant can do.
+- Always ask for clarification if the user input is ambiguous.
+- If the user asks for a specific task, provide step-by-step instructions.
+- If the user asks for a command, suggest relevant Obsidian commands.
+- If the user asks for a file operation, suggest relevant Obsidian file operations.
+- If the user asks for a shell command, suggest relevant Obsidian shell commands.
+
+Use the Obsidian tools to perform tasks related to Obsidian.
+`,
 };
 
 export default class OgentPlugin extends Plugin {

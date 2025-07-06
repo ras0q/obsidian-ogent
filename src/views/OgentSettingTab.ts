@@ -21,6 +21,7 @@ export class OgentSettingTab extends PluginSettingTab {
     if (this.plugin.settings.disabledToolIds.length > 0) {
       this.addDisabledMcpToolsSettings();
     }
+    this.addInstructionsSetting();
   }
 
   addModelSettings() {
@@ -225,5 +226,28 @@ export class OgentSettingTab extends PluginSettingTab {
             });
         });
     }
+  }
+
+  addInstructionsSetting() {
+    const instructionsEl = this.containerEl.createEl("section");
+
+    new Setting(instructionsEl)
+      .setHeading()
+      .setName("Instructions");
+
+    new Setting(instructionsEl)
+      .setName("Custom instructions")
+      .setDesc(
+        "Enter custom instructions for the agent. These will be used to guide the agent's behavior.",
+      )
+      .addTextArea((textArea) =>
+        textArea
+          .setPlaceholder("Enter custom instructions here...")
+          .setValue(this.plugin.settings.instructions)
+          .onChange(async (value) => {
+            this.plugin.settings.instructions = value;
+            await this.plugin.saveSettings();
+          })
+      );
   }
 }

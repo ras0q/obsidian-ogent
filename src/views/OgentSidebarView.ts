@@ -130,7 +130,7 @@ export class OgentSidebarView extends ItemView {
         }
         if (!this.agent) {
           this.agent = buildObsidianAgent(
-            this.app,
+            this.plugin,
             model,
           );
         }
