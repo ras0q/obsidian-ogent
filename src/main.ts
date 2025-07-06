@@ -11,6 +11,7 @@ interface OgentPluginSettings {
     apiKey?: string;
   };
   mcpServers: Record<OgentMcpServer["name"], Omit<OgentMcpServer, "name">>;
+  disabledToolIds: string[];
 }
 
 const DEFAULT_SETTINGS: OgentPluginSettings = {
@@ -19,6 +20,7 @@ const DEFAULT_SETTINGS: OgentPluginSettings = {
     name: "gemini-2.5-flash",
   },
   mcpServers: {},
+  disabledToolIds: [],
 };
 
 export default class OgentPlugin extends Plugin {

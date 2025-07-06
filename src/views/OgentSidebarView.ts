@@ -13,13 +13,14 @@ import { generateJSONCallout } from "../usecases/callout.ts";
 import { parseStreamPart } from "../usecases/stream.ts";
 import { setupModel } from "../usecases/lazymodel.ts";
 import { Agent } from "@mastra/core";
+import { McpToolsets, OgentMcpToolsModal } from "./OgentToolsetsModal.ts";
 
 export class OgentSidebarView extends ItemView {
   static VIEW_TYPE = "ogent-chat-view";
   plugin: OgentPlugin;
   mcpClient: MCPClient | null = null;
   // deno-lint-ignore no-explicit-any
-  toolsets: Record<string, Record<string, any>> = {};
+  toolsets: Record<string, Record<string, any>> | null = null;
   agent: Agent | null = null;
 
   constructor(leaf: WorkspaceLeaf, plugin: OgentPlugin) {
@@ -45,8 +46,32 @@ export class OgentSidebarView extends ItemView {
       cls: "ogent-input-container",
     });
 
-    const textInput = new TextAreaComponent(inputContainer);
+    const toolsetsButton = new ButtonComponent(inputContainer);
+    toolsetsButton.setButtonText("Manage tools")
+      .onClick(async () => {
+        if (!this.mcpClient) {
+          this.mcpClient = new MCPClient({
+            servers: this.plugin.settings.mcpServers,
+          });
+        }
 
+        // reload toolsets
+        const notice = new Notice("Reloading toolsets...");
+        this.toolsets = await this.mcpClient.getToolsets();
+        notice.hide();
+
+        new OgentMcpToolsModal(
+          this.app,
+          this.toolsets,
+          this.plugin.settings.disabledToolIds,
+          async (disabledToolIds) => {
+            this.plugin.settings.disabledToolIds = disabledToolIds;
+            await this.plugin.saveSettings();
+          },
+        ).open();
+      });
+
+    const textInput = new TextAreaComponent(inputContainer);
     textInput.setPlaceholder("Enter message...");
 
     const sendButton = new ButtonComponent(inputContainer);
@@ -91,7 +116,9 @@ export class OgentSidebarView extends ItemView {
           });
         }
         if (!this.toolsets) {
+          const notice = new Notice("Loading toolsets...");
           this.toolsets = await this.mcpClient.getToolsets();
+          notice.hide();
         }
         if (!this.agent) {
           this.agent = buildObsidianAgent(
@@ -100,11 +127,23 @@ export class OgentSidebarView extends ItemView {
           );
         }
 
+        const enabledToolsets: McpToolsets = {};
+        for (const toolsetName in this.toolsets) {
+          const toolset = this.toolsets[toolsetName];
+          enabledToolsets[toolsetName] = {};
+          for (const toolName in toolset) {
+            const tool = toolset[toolName];
+            if (!this.plugin.settings.disabledToolIds.includes(tool.id)) {
+              enabledToolsets[toolsetName][tool.id] = tool;
+            }
+          }
+        }
+
         const response = await this.agent.stream(
           history.filter((msg) => msg.content !== ""),
           {
             maxSteps: 20,
-            toolsets: this.toolsets,
+            toolsets: enabledToolsets,
           },
         );
 

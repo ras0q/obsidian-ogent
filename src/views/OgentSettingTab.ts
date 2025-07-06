@@ -142,5 +142,25 @@ export class OgentSettingTab extends PluginSettingTab {
             });
         },
       );
+
+    for (const disabledToolId of this.plugin.settings.disabledToolIds) {
+      new Setting(mcpServersEl)
+        .setName(`Disabled Tool ID: ${disabledToolId}`)
+        .setDesc("This tool is currently disabled")
+        .addButton((button) => {
+          button
+            .setWarning()
+            .setIcon("trash")
+            .setTooltip("Enable this tool")
+            .onClick(async () => {
+              this.plugin.settings.disabledToolIds.splice(
+                this.plugin.settings.disabledToolIds.indexOf(disabledToolId),
+                1,
+              );
+              await this.plugin.saveSettings();
+              this.display();
+            });
+        });
+    }
   }
 }
