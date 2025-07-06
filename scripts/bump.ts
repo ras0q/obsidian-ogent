@@ -46,6 +46,10 @@ async function ensureBranchUpToDate() {
 }
 
 async function ensureCIPassed() {
+  if (await $.commandExists("gh")) {
+    await $`gh workflow view CI`;
+  }
+
   const prompt = "Have all CI checks passed for the latest commit? (y/N): ";
   const answer = (await $.prompt(prompt)).trim().toLowerCase();
   if (answer !== "y" && answer !== "yes") {
@@ -58,6 +62,8 @@ async function ensureCIPassed() {
 }
 
 if (import.meta.main) {
+  $.setPrintCommand(true);
+
   await ensureCleanWorkingTree();
   await ensureBranchUpToDate();
   await ensureCIPassed();
