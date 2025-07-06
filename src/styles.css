@@ -42,6 +42,7 @@
       width: 100%;
       min-height: 5rem;
       resize: block;
+      field-sizing: content;
     }
   }
 }
